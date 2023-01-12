@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using PhotoBlog.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace PhotoBlog.Areas.Admin.Models
 {
-    public class PostViewModel
+    public class EditViewModel
     {
         public int Id { get; set; }
 
@@ -11,6 +12,8 @@ namespace PhotoBlog.Areas.Admin.Models
 
         [MaxLength(400)]
         public string? Description { get; set; }
-        public IFormFile Photo { get; set; } = null!;
+
+        [ValidImage(MaxFileSize =2)]
+        public IFormFile? Photo { get; set; } 
     }
 }
