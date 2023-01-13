@@ -27,9 +27,9 @@
                                 Posts
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" asp-controller="Posts" asp-action="Create" >New Post</a></li>
-                                <li><a class="dropdown-item" asp-controller="Posts" asp-action="Index" >List Posts</a></li>
-                            </ul> 
+                                <li><a class="dropdown-item" asp-controller="Posts" asp-action="Create">New Post</a></li>
+                                <li><a class="dropdown-item" asp-controller="Posts" asp-action="Index">List Posts</a></li>
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Visit The WebSite</a>
@@ -54,8 +54,11 @@
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script src="~/js/site.js" asp-append-version="true"></script>  
+    <script type="module">
+        import Tags from '@Url.Content("~/lib/bootstrap5-tags/tags.min.js")';
+        Tags.init("[data-tags-input");
+    </script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

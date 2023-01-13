@@ -13,7 +13,7 @@ namespace PhotoBlog.Attributes
             IFormFile? photo = value as IFormFile;
 
             // RESİM GEÇERLİLİK KONTROLLERİ
-            if (photo != null)
+            if (photo == null)
                 return ValidationResult.Success;
 
             if (!photo.ContentType.StartsWith("image/"))

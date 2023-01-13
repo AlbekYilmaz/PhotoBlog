@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PhotoBlog.Data;
 using PhotoBlog.Models;
 using System.Diagnostics;
@@ -18,7 +19,8 @@ namespace PhotoBlog.Controllers
 
         public IActionResult Index()
         {
-            var posts = _db.Posts.OrderByDescending(x => x.CreatedTime).ToList();
+            
+            var posts = _db.Posts.Include(x=>x.Tag).OrderByDescending(x => x.CreatedTime).ToList();
             return View(posts);
         }
 
