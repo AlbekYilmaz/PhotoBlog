@@ -1,13 +1,19 @@
-﻿@model List<Post>
+﻿@model HomeViewModel
 @{
     ViewData["Title"] = "Home Page";
+    ViewBag.Search = Model.Search;
+}
+@if (!string.IsNullOrEmpty(Model.Search))
+{
+    <h2 class="mb-3">Search Results for &ldquo; @Model.Search&rdquo;</h2>
+    <hr />
 }
 
 <div class="posts">
-    @foreach (var post in Model)
+    @foreach (var post in Model.Posts)
     {
         <div class="post">
-            <h2 class="post-title">@post.Title</h2>
+            <h3 class="post-title">@post.Title</h3>
             <div class="post-image">
                 <img src="~/img/@post.Photo" alt="@post.Title" />
             </div>
@@ -15,7 +21,7 @@
                 <div class="post-tags">
                     @foreach (var tag in post.Tag)
                     {
-                        <a href="#!">#@tag.Name</a>
+                        <a asp-route-q="#@tag.Name">#@tag.Name</a>
                     }
                 </div>
                 <div class="post-time">

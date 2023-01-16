@@ -81,12 +81,12 @@ namespace PhotoBlog.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                List<Tag>tags = new List<Tag>();
+                List<Tag> tags = new List<Tag>();
 
                 foreach (string tagName in vm.Tags!)
                 {
-                   var tag=_context.Tags.FirstOrDefault(x => x.Name == tagName);
-                    if (tag==null)
+                    var tag = _context.Tags.FirstOrDefault(x => x.Name == tagName);
+                    if (tag == null)
                     {
                         tag = new Tag() { Name = tagName };
                     }
@@ -134,12 +134,17 @@ namespace PhotoBlog.Areas.Admin.Controllers
             {
                 return NotFound();
             }
+            await _context.Entry(post).Collection(x => x.Tag).LoadAsync();
+
+
             var vm = new EditViewModel()
             {
                 Id = post.Id,
                 Title = post.Title,
-                Description = post.Description
+                Description = post.Description,
+                Tags = post.Tag.Select(x => x.Name).ToHashSet()
             };
+            LoadTags();
             return View(vm);
         }
 
@@ -166,10 +171,25 @@ namespace PhotoBlog.Areas.Admin.Controllers
                     DeletePhoto(post.Photo);
                     post.Photo = SavePhoto(vm.Photo);
                 }
+                await _context.Entry(post).Collection(x => x.Tag).LoadAsync();
+                //postun taglerini sil
+                // post.Tag.RemoveRange(0, post.Tag.Count);
+                post.Tag.RemoveAll(x => true);
+
+                foreach (string tagName in vm.Tags!)
+                {
+                    var tag = await _context.Tags.FirstOrDefaultAsync(x => x.Name == tagName);
+                    if (tag==null)
+                    {
+                        tag = new Tag() { Name = tagName };
+                    }
+                    post.Tag.Add(tag);
+                }
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
+            LoadTags(vm.Tags);
             return View(vm);
         }
 

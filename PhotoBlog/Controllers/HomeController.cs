@@ -17,11 +17,30 @@ namespace PhotoBlog.Controllers
             _db = db;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string? q)
         {
-            
-            var posts = _db.Posts.Include(x=>x.Tag).OrderByDescending(x => x.CreatedTime).ToList();
-            return View(posts);
+            IQueryable<Post>query=_db.Posts.Include(x=>x.Tag);
+            if (!string.IsNullOrEmpty(q))
+            {
+                q= q.Trim();    
+                if (q.StartsWith("#"))
+                {
+                    var tag=q.Substring(1);
+                    query = query.Where(x => x.Tag.Any(t => t.Name == tag));
+                }
+                else
+                {
+                    query=query.Where(x => x.Title.Contains(q)||x.Description!.Contains(q));
+                }
+            }
+            var posts = query.OrderByDescending(x => x.CreatedTime).ToList();
+
+            var vm = new HomeViewModel()
+            {
+                Posts = posts,
+                Search = q
+            };
+            return View(vm);
         }
 
         public IActionResult Privacy()
